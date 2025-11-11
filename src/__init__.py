@@ -1,0 +1,2 @@
+"""Easy RAG application package."""
+
