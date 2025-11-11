@@ -79,6 +79,9 @@ uvicorn src.main:app --host 0.0.0.0 --port 8000
 
 ## Environment Variables
 
-- `QDRANT_URL` - Qdrant server URL (default: http://localhost:6333)
+- `QDRANT_HOST` - Qdrant server host (default: localhost)
+- `QDRANT_GRPC_PORT` - Qdrant gRPC port (default: 6334)
 - Other settings can be configured via `.env` file or environment variables
+
+Note: The application uses gRPC for Qdrant communication, which provides better performance than HTTP.
 

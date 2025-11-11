@@ -12,6 +12,8 @@ class DocumentResult(BaseModel):
     """Model for a single document result."""
     source: Optional[str]
     text: str
+    score: Optional[float] = None  # Relevance score (higher is better)
+    page: Optional[int] = None  # Page number if available
 
 
 class QueryResponse(BaseModel):

@@ -1,5 +1,6 @@
 """API routes for document management and querying."""
 import os
+import logging
 import tempfile
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
@@ -7,6 +8,8 @@ from src.models.schemas import QueryRequest, QueryResponse, UploadResponse, Docu
 from src.services.document_processor import DocumentProcessor
 from src.services.vectorstore_service import VectorStoreService
 from src.config import settings
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1", tags=["documents"])
 
@@ -20,28 +23,46 @@ async def upload_document(file: UploadFile = File(...)):
     """
     Upload and index a document.
     
-    Supports PDF and text files.
+    Supports PDF and text files. Large PDFs are processed in batches
+    to avoid memory issues.
     """
-    with tempfile.NamedTemporaryFile(delete=False) as tmp:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=f".{file.filename.split('.')[-1]}") as tmp:
         tmp.write(await file.read())
         tmp_path = tmp.name
     
+    total_chunks = 0
+    
     try:
-        # Load and process document
-        docs = document_processor.load_document(tmp_path)
-        chunks = document_processor.chunk_documents(docs)
+        logger.info(f"Starting upload of file: {file.filename}")
         
-        # Add to vectorstore
-        vectorstore_service.add_documents(chunks)
+        # Process document in batches for large files
+        # Pass original filename so it's preserved in metadata instead of temp filename
+        batch_count = 0
+        for doc_batch in document_processor.load_document_batched(tmp_path, original_filename=file.filename):
+            batch_count += 1
+            logger.info(f"Processing document batch {batch_count}")
+            
+            # Chunk the batch
+            chunks = document_processor.chunk_documents(doc_batch)
+            logger.info(f"Created {len(chunks)} chunks from batch {batch_count}")
+            
+            # Add chunks to vectorstore in batches
+            if chunks:
+                added = vectorstore_service.add_documents_batched(chunks)
+                total_chunks += added
+        
+        logger.info(f"Successfully indexed {total_chunks} chunks from {file.filename}")
         
         return UploadResponse(
             status="ok",
-            chunks_indexed=len(chunks)
+            chunks_indexed=total_chunks
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error processing file {file.filename}: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Error processing document: {str(e)}")
     finally:
-        os.remove(tmp_path)
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
 
 @router.post("/ask", response_model=QueryResponse)
@@ -62,26 +83,39 @@ async def ask(request: QueryRequest):
                 message="No documents found in the vector store. Please upload documents first."
             )
         
-        # Get retriever with appropriate k value
+        # Get appropriate k value
         k = min(settings.default_k, collection_info.points_count)
-        retriever = vectorstore_service.get_retriever(
-            search_type="similarity",
+        
+        # Use similarity_search_with_score to get relevance scores
+        results_with_scores = vectorstore_service.similarity_search_with_score(
+            request.query, 
             k=k
         )
         
-        # Retrieve relevant documents
-        results = retriever.invoke(request.query)
-        
-        # Format response
-        return QueryResponse(
-            query=request.query,
-            results=[
+        # Format response with scores and metadata
+        formatted_results = []
+        for doc, score in results_with_scores:
+            # Extract page number from metadata if available
+            page = doc.metadata.get("page")
+            if page is not None:
+                try:
+                    page = int(page)
+                except (ValueError, TypeError):
+                    page = None
+            
+            formatted_results.append(
                 DocumentResult(
                     source=doc.metadata.get("source"),
-                    text=doc.page_content
+                    text=doc.page_content,
+                    score=float(score),  # Convert to float for JSON serialization
+                    page=page
                 )
-                for doc in results
-            ]
+            )
+        
+        # Results are already sorted by score (highest first)
+        return QueryResponse(
+            query=request.query,
+            results=formatted_results
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

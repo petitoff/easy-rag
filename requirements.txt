@@ -3,7 +3,8 @@ langchain-core
 langchain-community
 langchain-huggingface
 langchain-qdrant
-qdrant-client
+qdrant-client[grpc]
+pymupdf
 
 transformers
 torch

@@ -9,15 +9,17 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
     # Qdrant Configuration
-    qdrant_url: str = os.getenv("QDRANT_URL", "http://localhost:6333")
+    qdrant_host: str = os.getenv("QDRANT_HOST", "localhost")
+    qdrant_grpc_port: int = int(os.getenv("QDRANT_GRPC_PORT", "6334"))
     collection_name: str = "rag_store"
 
     # Embedding Model Configuration
     embed_model: str = "Qwen/Qwen3-Embedding-0.6B"
 
     # Document Processing Configuration
-    chunk_size: int = 600
-    chunk_overlap: int = 80
+    chunk_size: int = 800  # Increased for better context preservation
+    chunk_overlap: int = 100  # Increased overlap for better continuity
+    batch_size: int = 100
 
     # Retrieval Configuration
     default_k: int = 8
