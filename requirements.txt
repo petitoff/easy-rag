@@ -1,0 +1,10 @@
+langchain 
+langchain-community 
+langchain-huggingface 
+qdrant-client 
+transformers 
+torch 
+sentence-transformers
+fastapi
+uvicorn
+python-multipart
