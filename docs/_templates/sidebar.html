@@ -1,0 +1,39 @@
+{# Custom sidebar template for Easy RAG Documentation #}
+
+{# This extends the default sidebar #}
+{% extends "sidebartoc.html" %}
+
+{% block extrahead %}
+    {# Add custom CSS #}
+    <link rel="stylesheet" href="{{ pathto('_static/custom.css', 1) }}" type="text/css" />
+    {# Add custom JavaScript #}
+    <script type="text/javascript" src="{{ pathto('_static/custom.js', 1) }}"></script>
+{% endblock %}
+
+{# Add custom content to sidebar #}
+{% block sidebarsearch %}
+    {{ super() }}
+    
+    {# Add quick links section #}
+    <div class="sidebar-quicklinks" style="margin-top: 2em; padding: 1em; background: #f5f5f5; border-radius: 4px;">
+        <h4 style="margin-top: 0;">Quick Links</h4>
+        <ul style="list-style: none; padding-left: 0;">
+            <li style="margin: 0.5em 0;">
+                <a href="{{ pathto('installation') }}">📦 Installation</a>
+            </li>
+            <li style="margin: 0.5em 0;">
+                <a href="{{ pathto('usage') }}">🚀 Usage Guide</a>
+            </li>
+            <li style="margin: 0.5em 0;">
+                <a href="{{ pathto('api') }}">📚 API Reference</a>
+            </li>
+        </ul>
+    </div>
+    
+    {# Add version info #}
+    <div class="sidebar-version" style="margin-top: 1em; padding: 1em; background: #e7f3ff; border-radius: 4px; font-size: 0.9em;">
+        <strong>Version:</strong> {{ release }}<br>
+        <strong>Theme:</strong> Read the Docs
+    </div>
+{% endblock %}
+

@@ -1,0 +1,41 @@
+{# Custom footer template for Easy RAG Documentation #}
+
+<div class="footer">
+    <div class="footer-content">
+        <p>
+            <strong>Easy RAG</strong> - A simple RAG API using Qdrant and LangChain
+        </p>
+        <p>
+            Documentation version {{ release }} | 
+            <a href="https://github.com/your-org/easy-rag">GitHub</a> | 
+            <a href="https://github.com/your-org/easy-rag/issues">Report Issues</a>
+        </p>
+        <p class="copyright">
+            &copy; {{ copyright }}
+        </p>
+    </div>
+</div>
+
+<style>
+.footer {
+    margin-top: 3em;
+    padding-top: 2em;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    color: #666;
+}
+
+.footer-content p {
+    margin: 0.5em 0;
+}
+
+.footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+</style>
+
