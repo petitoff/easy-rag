@@ -14,6 +14,22 @@ services:
       - QDRANT__SERVICE__GRPC_PORT=6334
     restart: unless-stopped
 
+  rag:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag-api
+    ports:
+      - "8000:8000"
+    environment:
+      - QDRANT_HOST=qdrant
+      - QDRANT_GRPC_PORT=6334
+      - HOST=0.0.0.0
+      - PORT=8000
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+
 volumes:
   qdrant_storage:
     driver: local
