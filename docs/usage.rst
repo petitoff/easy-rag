@@ -10,7 +10,7 @@ Quick Start
 
    .. code-block:: bash
 
-      docker-compose up -d
+      docker compose up -d
 
 2. **Upload a document:**
 

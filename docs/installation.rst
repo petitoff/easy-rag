@@ -45,10 +45,10 @@ The easiest way to run Easy RAG is using Docker Compose, which sets up both the 
    # Edit .env as needed
 
    # Build and start services
-   docker-compose up --build
+   docker compose up --build
 
    # Run in background
-   docker-compose up -d --build
+   docker compose up -d --build
 
 The API will be available at ``http://localhost:8000`` and Qdrant at ``http://localhost:6333``.
 
@@ -83,7 +83,7 @@ For local development:
 
    .. code-block:: bash
 
-      docker-compose up -d qdrant
+      docker compose up -d qdrant
 
 5. **Configure environment variables (optional):**
 
@@ -208,7 +208,7 @@ Troubleshooting
 Common Issues
 ~~~~~~~~~~~~~
 
-* **Port already in use**: Change the port in ``.env`` or docker-compose.yml
+* **Port already in use**: Change the port in ``.env`` or docker-compose.yml (note: filename is still docker-compose.yml)
 * **Qdrant connection error**: Ensure Qdrant is running and accessible
 * **Memory errors with large PDFs**: The batch processing should handle this, but you can reduce ``BATCH_SIZE`` if needed
 * **Import errors**: Make sure all dependencies are installed: ``pip install -r requirements.txt``

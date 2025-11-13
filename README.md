@@ -32,10 +32,10 @@ cd easy-rag
 cp .env.example .env  # if available
 
 # Build and start services
-docker-compose up --build
+docker compose up --build
 
 # Run in background
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 The API will be available at `http://localhost:8000` and Qdrant at `http://localhost:6333`.
@@ -55,7 +55,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
 # Start Qdrant (using Docker)
-docker-compose up -d qdrant
+docker compose up -d qdrant
 
 # Create .env file (optional)
 cp .env.example .env
