@@ -4,10 +4,10 @@ import logging
 import tempfile
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
-from src.models.schemas import QueryRequest, QueryResponse, UploadResponse, DocumentResult
-from src.services.document_processor import DocumentProcessor
-from src.services.vectorstore_service import VectorStoreService
-from src.config import settings
+from easyrag.models.schemas import QueryRequest, QueryResponse, UploadResponse, DocumentResult
+from easyrag.services.document_processor import DocumentProcessor
+from easyrag.services.vectorstore_service import VectorStoreService
+from easyrag.config import settings
 
 logger = logging.getLogger(__name__)
 

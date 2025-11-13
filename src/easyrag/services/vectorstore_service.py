@@ -6,7 +6,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from qdrant_client import QdrantClient
 from qdrant_client.models import VectorParams, Distance
 
-from src.config import settings
+from easyrag.config import settings
 
 logger = logging.getLogger(__name__)
 

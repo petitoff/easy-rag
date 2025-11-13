@@ -1,7 +1,5 @@
 """Application configuration settings."""
 
-import os
-
 from pydantic_settings import BaseSettings
 
 
@@ -9,8 +7,8 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
     # Qdrant Configuration
-    qdrant_host: str = os.getenv("QDRANT_HOST", "localhost")
-    qdrant_grpc_port: int = int(os.getenv("QDRANT_GRPC_PORT", "6334"))
+    qdrant_host: str = "localhost"
+    qdrant_grpc_port: int = 6334
     collection_name: str = "rag_store"
 
     # Embedding Model Configuration

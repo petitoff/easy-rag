@@ -5,7 +5,7 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader, PyMuPDFLoader
 
-from src.config import settings
+from easyrag.config import settings
 
 logger = logging.getLogger(__name__)
 

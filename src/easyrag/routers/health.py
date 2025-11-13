@@ -2,8 +2,8 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from src.services.vectorstore_service import VectorStoreService
-from src.config import settings
+from easyrag.services.vectorstore_service import VectorStoreService
+from easyrag.config import settings
 
 router = APIRouter(tags=["health"])
 
